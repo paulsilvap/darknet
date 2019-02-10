@@ -4,23 +4,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
+// extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
 extern void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filename, float thresh, float hier_thresh, char *outfile, int fullscreen);
 extern void run_yolo(int argc, char **argv);
 extern void run_detector(int argc, char **argv);
-extern void run_coco(int argc, char **argv);
-extern void run_nightmare(int argc, char **argv);
-extern void run_classifier(int argc, char **argv);
-extern void run_regressor(int argc, char **argv);
-extern void run_segmenter(int argc, char **argv);
-extern void run_isegmenter(int argc, char **argv);
-extern void run_char_rnn(int argc, char **argv);
-extern void run_tag(int argc, char **argv);
-extern void run_cifar(int argc, char **argv);
-extern void run_go(int argc, char **argv);
-extern void run_art(int argc, char **argv);
-extern void run_super(int argc, char **argv);
-extern void run_lsd(int argc, char **argv);
+// extern void run_coco(int argc, char **argv);
+// extern void run_nightmare(int argc, char **argv);
+// extern void run_classifier(int argc, char **argv);
+// extern void run_regressor(int argc, char **argv);
+// extern void run_segmenter(int argc, char **argv);
+// extern void run_isegmenter(int argc, char **argv);
+// extern void run_char_rnn(int argc, char **argv);
+// extern void run_tag(int argc, char **argv);
+// extern void run_cifar(int argc, char **argv);
+// extern void run_go(int argc, char **argv);
+// extern void run_art(int argc, char **argv);
+// extern void run_super(int argc, char **argv);
+// extern void run_lsd(int argc, char **argv);
 
 void average(int argc, char *argv[])
 {
@@ -419,10 +419,11 @@ int main(int argc, char **argv)
     }
 #endif
 
-    if (0 == strcmp(argv[1], "average")){
-        average(argc, argv);
-    // } else if (0 == strcmp(argv[1], "yolo")){
-    //     run_yolo(argc, argv);
+    // if (0 == strcmp(argv[1], "average")){
+        // average(argc, argv);
+    // } else 
+    if (0 == strcmp(argv[1], "yolo")){
+        run_yolo(argc, argv);
     // } else if (0 == strcmp(argv[1], "super")){
     //     run_super(argc, argv);
     // } else if (0 == strcmp(argv[1], "lsd")){
@@ -493,8 +494,8 @@ int main(int argc, char **argv)
     //     visualize(argv[2], (argc > 3) ? argv[3] : 0);
     // } else if (0 == strcmp(argv[1], "mkimg")){
     //     mkimg(argv[2], argv[3], atoi(argv[4]), atoi(argv[5]), atoi(argv[6]), argv[7]);
-    // } else if (0 == strcmp(argv[1], "imtest")){
-    //     test_resize(argv[2]);
+    } else if (0 == strcmp(argv[1], "imtest")){
+        test_resize(argv[2]);
     } else {
         fprintf(stderr, "Not an option: %s\n", argv[1]);
     }
