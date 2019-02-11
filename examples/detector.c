@@ -20,9 +20,9 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
     int i;
     for(i = 0; i < ngpus; ++i){
         srand(seed);
-#ifdef GPU
+        #ifdef GPU
         cuda_set_device(gpus[i]);
-#endif
+        #endif
         nets[i] = load_network(cfgfile, weightfile, clear);
         nets[i]->learning_rate *= ngpus;
     }
@@ -113,41 +113,41 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
 
         time=what_time_is_it_now();
         float loss = 0;
-#ifdef GPU
+        #ifdef GPU
         if(ngpus == 1){
             loss = train_network(net, train);
         } else {
             loss = train_networks(nets, ngpus, train, 4);
         }
-#else
+        #else
         loss = train_network(net, train);
-#endif
+        #endif
         if (avg_loss < 0) avg_loss = loss;
         avg_loss = avg_loss*.9 + loss*.1;
 
         i = get_current_batch(net);
         printf("%ld: %f, %f avg, %f rate, %lf seconds, %d images\n", get_current_batch(net), loss, avg_loss, get_current_rate(net), what_time_is_it_now()-time, i*imgs);
         if(i%100==0){
-#ifdef GPU
+            #ifdef GPU
             if(ngpus != 1) sync_nets(nets, ngpus, 0);
-#endif
+            #endif
             char buff[256];
             sprintf(buff, "%s/%s.backup", backup_directory, base);
             save_weights(net, buff);
         }
         if(i%10000==0 || (i < 1000 && i%100 == 0)){
-#ifdef GPU
+            #ifdef GPU
             if(ngpus != 1) sync_nets(nets, ngpus, 0);
-#endif
+            #endif
             char buff[256];
             sprintf(buff, "%s/%s_%d.weights", backup_directory, base, i);
             save_weights(net, buff);
         }
         free_data(train);
     }
-#ifdef GPU
+    #ifdef GPU
     if(ngpus != 1) sync_nets(nets, ngpus, 0);
-#endif
+    #endif
     char buff[256];
     sprintf(buff, "%s/%s_final.weights", backup_directory, base);
     save_weights(net, buff);
@@ -603,16 +603,14 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
         if (nms) do_nms_sort(dets, nboxes, l.classes, nms);
         draw_detections(im, dets, nboxes, thresh, names, alphabet, l.classes);
         free_detections(dets, nboxes);
-        if(outfile){
-            save_image(im, outfile);
+        if(!outfile){
+            outfile = "predictions";
         }
-        else{
-            save_image(im, "predictions");
-#ifdef OPENCV
-            make_window("predictions", 512, 512, 0);
-            show_image(im, "predictions", 0);
-#endif
-        }
+        save_image(im, outfile);
+        #ifdef OPENCV
+        make_window(outfile, 512, 512, 0);
+        show_image(im, outfile, 0);
+        #endif
 
         free_image(im);
         free_image(sized);

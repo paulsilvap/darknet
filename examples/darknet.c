@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
+extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
 extern void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filename, float thresh, float hier_thresh, char *outfile, int fullscreen);
 extern void run_yolo(int argc, char **argv);
 extern void run_detector(int argc, char **argv);
@@ -22,7 +22,7 @@ extern void run_detector(int argc, char **argv);
 // extern void run_super(int argc, char **argv);
 // extern void run_lsd(int argc, char **argv);
 
-void average(int argc, char *argv[])
+/* void average(int argc, char *argv[])
 {
     char *cfgfile = argv[2];
     char *outfile = argv[3];
@@ -76,9 +76,9 @@ void average(int argc, char *argv[])
         }
     }
     save_weights(sum, outfile);
-}
+} */
 
-long numops(network *net)
+/* long numops(network *net)
 {
     int i;
     long ops = 0;
@@ -111,9 +111,9 @@ long numops(network *net)
         }
     }
     return ops;
-}
+} */
 
-void speed(char *cfgfile, int tics)
+/* void speed(char *cfgfile, int tics)
 {
     if (tics == 0) tics = 1000;
     network *net = parse_network_cfg(cfgfile);
@@ -131,18 +131,18 @@ void speed(char *cfgfile, int tics)
     printf("FLOPS: %.2f Bn\n", (float)ops/1000000000.*tics/t);
     printf("Speed: %f sec/eval\n", t/tics);
     printf("Speed: %f Hz\n", tics/t);
-}
+} */
 
-void operations(char *cfgfile)
+/* void operations(char *cfgfile)
 {
     gpu_index = -1;
     network *net = parse_network_cfg(cfgfile);
     long ops = numops(net);
     printf("Floating Point Operations: %ld\n", ops);
     printf("Floating Point Operations: %.2f Bn\n", (float)ops/1000000000.);
-}
+} */
 
-void oneoff(char *cfgfile, char *weightfile, char *outfile)
+/* void oneoff(char *cfgfile, char *weightfile, char *outfile)
 {
     gpu_index = -1;
     network *net = parse_network_cfg(cfgfile);
@@ -167,9 +167,9 @@ void oneoff(char *cfgfile, char *weightfile, char *outfile)
     copy_cpu(l.n/3*l.c, l.weights, 1, l.weights + 2*l.n/3*l.c, 1);
     *net->seen = 0;
     save_weights(net, outfile);
-}
+} */
 
-void oneoff2(char *cfgfile, char *weightfile, char *outfile, int l)
+/* void oneoff2(char *cfgfile, char *weightfile, char *outfile, int l)
 {
     gpu_index = -1;
     network *net = parse_network_cfg(cfgfile);
@@ -179,16 +179,16 @@ void oneoff2(char *cfgfile, char *weightfile, char *outfile, int l)
     }
     *net->seen = 0;
     save_weights_upto(net, outfile, net->n);
-}
+} */
 
-void partial(char *cfgfile, char *weightfile, char *outfile, int max)
+/* void partial(char *cfgfile, char *weightfile, char *outfile, int max)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 1);
     save_weights_upto(net, outfile, max);
-}
+} */
 
-void print_weights(char *cfgfile, char *weightfile, int n)
+/* void print_weights(char *cfgfile, char *weightfile, int n)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 1);
@@ -205,9 +205,9 @@ void print_weights(char *cfgfile, char *weightfile, int n)
         //printf("]%s\n", (i == l.n-1)?"":",");
     }
     //printf("]");
-}
+} */
 
-void rescale_net(char *cfgfile, char *weightfile, char *outfile)
+/* void rescale_net(char *cfgfile, char *weightfile, char *outfile)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 0);
@@ -220,9 +220,9 @@ void rescale_net(char *cfgfile, char *weightfile, char *outfile)
         }
     }
     save_weights(net, outfile);
-}
+} */
 
-void rgbgr_net(char *cfgfile, char *weightfile, char *outfile)
+/* void rgbgr_net(char *cfgfile, char *weightfile, char *outfile)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 0);
@@ -235,9 +235,9 @@ void rgbgr_net(char *cfgfile, char *weightfile, char *outfile)
         }
     }
     save_weights(net, outfile);
-}
+} */
 
-void reset_normalize_net(char *cfgfile, char *weightfile, char *outfile)
+/* void reset_normalize_net(char *cfgfile, char *weightfile, char *outfile)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 0);
@@ -260,9 +260,9 @@ void reset_normalize_net(char *cfgfile, char *weightfile, char *outfile)
         }
     }
     save_weights(net, outfile);
-}
+} */
 
-layer normalize_layer(layer l, int n)
+/* layer normalize_layer(layer l, int n)
 {
     int j;
     l.batch_normalize=1;
@@ -273,9 +273,9 @@ layer normalize_layer(layer l, int n)
     l.rolling_mean = calloc(n, sizeof(float));
     l.rolling_variance = calloc(n, sizeof(float));
     return l;
-}
+} */
 
-void normalize_net(char *cfgfile, char *weightfile, char *outfile)
+/* void normalize_net(char *cfgfile, char *weightfile, char *outfile)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 0);
@@ -299,9 +299,9 @@ void normalize_net(char *cfgfile, char *weightfile, char *outfile)
         }
     }
     save_weights(net, outfile);
-}
+} */
 
-void statistics_net(char *cfgfile, char *weightfile)
+/* void statistics_net(char *cfgfile, char *weightfile)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 0);
@@ -329,9 +329,9 @@ void statistics_net(char *cfgfile, char *weightfile)
         }
         printf("\n");
     }
-}
+} */
 
-void denormalize_net(char *cfgfile, char *weightfile, char *outfile)
+/* void denormalize_net(char *cfgfile, char *weightfile, char *outfile)
 {
     gpu_index = -1;
     network *net = load_network(cfgfile, weightfile, 0);
@@ -363,9 +363,9 @@ void denormalize_net(char *cfgfile, char *weightfile, char *outfile)
         }
     }
     save_weights(net, outfile);
-}
+} */
 
-void mkimg(char *cfgfile, char *weightfile, int h, int w, int num, char *prefix)
+/* void mkimg(char *cfgfile, char *weightfile, int h, int w, int num, char *prefix)
 {
     network *net = load_network(cfgfile, weightfile, 0);
     image *ims = get_weights(net->layers[0]);
@@ -389,13 +389,13 @@ void mkimg(char *cfgfile, char *weightfile, int h, int w, int num, char *prefix)
         save_image(im, buff);
         free_image(im);
     }
-}
+} */
 
-void visualize(char *cfgfile, char *weightfile)
+/* void visualize(char *cfgfile, char *weightfile)
 {
     network *net = load_network(cfgfile, weightfile, 0);
     visualize_network(net);
-}
+} */
 
 int main(int argc, char **argv)
 {
@@ -444,8 +444,8 @@ int main(int argc, char **argv)
     //     run_char_rnn(argc, argv);
     // } else if (0 == strcmp(argv[1], "coco")){
     //     run_coco(argc, argv);
-    // } else if (0 == strcmp(argv[1], "classify")){
-    //     predict_classifier("cfg/imagenet1k.data", argv[2], argv[3], argv[4], 5);
+    } else if (0 == strcmp(argv[1], "classify")){
+        predict_classifier("cfg/imagenet1k.data", argv[2], argv[3], argv[4], 5);
     // } else if (0 == strcmp(argv[1], "classifier")){
     //     run_classifier(argc, argv);
     // } else if (0 == strcmp(argv[1], "regressor")){

@@ -830,10 +830,10 @@ network *parse_network_cfg(char *filename)
             l = parse_dropout(options, params);
             l.output = net->layers[count-1].output;
             l.delta = net->layers[count-1].delta;
-#ifdef GPU
+            #ifdef GPU
             l.output_gpu = net->layers[count-1].output_gpu;
             l.delta_gpu = net->layers[count-1].delta_gpu;
-#endif
+            #endif
         }else{
             fprintf(stderr, "Type not recognized: %s\n", s->type);
         }
@@ -868,22 +868,22 @@ network *parse_network_cfg(char *filename)
     net->output = out.output;
     net->input = calloc(net->inputs*net->batch, sizeof(float));
     net->truth = calloc(net->truths*net->batch, sizeof(float));
-#ifdef GPU
+    #ifdef GPU
     net->output_gpu = out.output_gpu;
     net->input_gpu = cuda_make_array(net->input, net->inputs*net->batch);
     net->truth_gpu = cuda_make_array(net->truth, net->truths*net->batch);
-#endif
+    #endif
     if(workspace_size){
         //printf("%ld\n", workspace_size);
-#ifdef GPU
+        #ifdef GPU
         if(gpu_index >= 0){
             net->workspace = cuda_make_array(0, (workspace_size-1)/sizeof(float)+1);
         }else {
             net->workspace = calloc(1, workspace_size);
         }
-#else
+        #else
         net->workspace = calloc(1, workspace_size);
-#endif
+        #endif
     }
     return net;
 }

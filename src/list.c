@@ -25,7 +25,7 @@ void transfer_node(list *s, list *d, node *n)
 }
 */
 
-void *list_pop(list *l){
+/* void *list_pop(list *l){
     if(!l->back) return 0;
     node *b = l->back;
     void *val = b->val;
@@ -35,7 +35,7 @@ void *list_pop(list *l){
     --l->size;
     
     return val;
-}
+} */
 
 void list_insert(list *l, void *val)
 {
@@ -70,14 +70,14 @@ void free_list(list *l)
 	free(l);
 }
 
-void free_list_contents(list *l)
+/* void free_list_contents(list *l)
 {
 	node *n = l->front;
 	while(n){
 		free(n->val);
 		n = n->next;
 	}
-}
+} */
 
 void **list_to_array(list *l)
 {

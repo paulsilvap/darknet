@@ -1170,12 +1170,12 @@ void *load_threads(void *ptr)
     return 0;
 }
 
-void load_data_blocking(load_args args)
+/* void load_data_blocking(load_args args)
 {
     struct load_args *ptr = calloc(1, sizeof(struct load_args));
     *ptr = args;
     load_thread(ptr);
-}
+} */
 
 pthread_t load_data(load_args args)
 {
@@ -1589,7 +1589,7 @@ void translate_data_rows(data d, float s)
     }
 }
 
-data copy_data(data d)
+/* data copy_data(data d)
 {
     data c = {0};
     c.w = d.w;
@@ -1600,15 +1600,15 @@ data copy_data(data d)
     c.X = copy_matrix(d.X);
     c.y = copy_matrix(d.y);
     return c;
-}
+} */
 
-void normalize_data_rows(data d)
+/* void normalize_data_rows(data d)
 {
     int i;
     for(i = 0; i < d.X.rows; ++i){
         normalize_array(d.X.vals[i], d.X.cols);
     }
-}
+} */
 
 data get_data_part(data d, int part, int total)
 {
@@ -1623,7 +1623,7 @@ data get_data_part(data d, int part, int total)
     return p;
 }
 
-data get_random_data(data d, int num)
+/* data get_random_data(data d, int num)
 {
     data r = {0};
     r.shallow = 1;
@@ -1644,9 +1644,9 @@ data get_random_data(data d, int num)
         r.y.vals[i] = d.y.vals[index];
     }
     return r;
-}
+} */
 
-data *split_data(data d, int part, int total)
+/* data *split_data(data d, int part, int total)
 {
     data *split = calloc(2, sizeof(data));
     int i;
@@ -1681,5 +1681,5 @@ data *split_data(data d, int part, int total)
     split[0] = train;
     split[1] = test;
     return split;
-}
+} */
 

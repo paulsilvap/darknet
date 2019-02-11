@@ -29,7 +29,7 @@ typedef struct{
     char **names;
 } metadata;
 
-metadata get_metadata(char *file);
+// metadata get_metadata(char *file);
 
 typedef struct{
     int *leaf;
@@ -611,7 +611,7 @@ data select_data(data *orig, int *inds);
 
 void forward_network(network *net);
 void backward_network(network *net);
-void update_network(network *net);
+// void update_network(network *net);
 
 
 float dot_cpu(int N, float *X, int INCX, float *Y, int INCY);
@@ -654,7 +654,7 @@ void normalize_image(image p);
 void matrix_to_csv(matrix m);
 float train_network_sgd(network *net, data d, int n);
 void rgbgr_image(image im);
-data copy_data(data d);
+// data copy_data(data d);
 data concat_data(data d1, data d2);
 data load_cifar10_data(char *filename);
 float matrix_topk_accuracy(matrix truth, matrix guess, int k);
@@ -690,7 +690,7 @@ void get_region_detections(layer l, int w, int h, int netw, int neth, float thre
 int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection *dets);
 void free_network(network *net);
 void set_batch_network(network *net, int b);
-void set_temp_network(network *net, float t);
+// void set_temp_network(network *net, float t);
 image load_image(char *filename, int w, int h, int c);
 image load_image_color(char *filename, int w, int h);
 image make_image(int w, int h, int c);
@@ -714,7 +714,7 @@ void composite_3d(char *f1, char *f2, char *out, int delta);
 data load_data_old(char **paths, int n, int m, char **labels, int k, int w, int h);
 size_t get_current_batch(network *net);
 void constrain_image(image im);
-image get_network_image_layer(network *net, int i);
+// image get_network_image_layer(network *net, int i);
 layer get_network_output_layer(network *net);
 void top_predictions(network *net, int n, int *index);
 void flip_image(image a);
@@ -727,7 +727,7 @@ image grayscale_image(image im);
 void rotate_image_cw(image im, int times);
 double what_time_is_it_now();
 image rotate_image(image m, float rad);
-void visualize_network(network *net);
+// void visualize_network(network *net);
 float box_iou(box a, box b);
 data load_all_cifar10();
 box_label *read_boxes(char *filename, int *n);
@@ -736,17 +736,17 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
 
 matrix network_predict_data(network *net, data test);
 image **load_alphabet();
-image get_network_image(network *net);
+// image get_network_image(network *net);
 float *network_predict(network *net, float *input);
 
 int network_width(network *net);
 int network_height(network *net);
-float *network_predict_image(network *net, image im);
+// float *network_predict_image(network *net, image im);
 void network_detect(network *net, image im, float thresh, float hier_thresh, float nms, detection *dets);
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num);
 void free_detections(detection *dets, int n);
 
-void reset_network_state(network *net, int b);
+// void reset_network_state(network *net, int b);
 
 char **get_labels(char *filename);
 void do_nms_obj(detection *dets, int total, int classes, float thresh);

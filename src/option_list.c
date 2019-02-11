@@ -32,7 +32,7 @@ list *read_data_cfg(char *filename)
     return options;
 }
 
-metadata get_metadata(char *file)
+/* metadata get_metadata(char *file)
 {
     metadata m = {0};
     list *options = read_data_cfg(file);
@@ -47,7 +47,7 @@ metadata get_metadata(char *file)
     m.classes = option_find_int(options, "classes", 2);
     free_list(options);
     return m;
-}
+} */
 
 int read_option(char *s, list *options)
 {
