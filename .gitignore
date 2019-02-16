@@ -8,6 +8,7 @@
 *.a
 *.so
 *.weights
+backup/
 old/
 mnist/
 data/
@@ -28,3 +29,4 @@ ehthumbs.db
 Icon?
 Thumbs.db
 *.swp
+darknet53.conv.74
