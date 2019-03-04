@@ -658,6 +658,7 @@ void harmless_update_network_gpu(network *net);
 #endif
 
 // Taken from activations.h
+ACTIVATION get_activation(char *s);
 void gradient_array(const float *x, const int n, const ACTIVATION a, float *delta);
 void activate_array(float *x, const int n, const ACTIVATION a);
 #ifdef GPU
@@ -738,7 +739,6 @@ int show_image(image p, const char *name, int ms);
 image copy_image(image p);
 void draw_box_width(image a, int x1, int y1, int x2, int y2, int w, float r, float g, float b);
 float get_current_rate(network *net);
-void composite_3d(char *f1, char *f2, char *out, int delta);
 data load_data_old(char **paths, int n, int m, char **labels, int k, int w, int h);
 size_t get_current_batch(network *net);
 void constrain_image(image im);
@@ -755,7 +755,7 @@ image grayscale_image(image im);
 void rotate_image_cw(image im, int times);
 double what_time_is_it_now();
 image rotate_image(image m, float rad);
-// void visualize_network(network *net);
+void visualize_network(network *net);
 float box_iou(box a, box b);
 // Added from box.h
 float box_rmse(box a, box b);
@@ -809,9 +809,6 @@ char *fgetl(FILE *fp);
 void strip(char *s);
 float sec(clock_t clocks);
 void **list_to_array(list *l);
-// Taken from list.h
-void list_insert(list *, void *);
-list *make_list();
 void top_k(float *a, int n, int k, int *index);
 int *read_map(char *filename);
 void error(const char *s);
@@ -831,6 +828,17 @@ int *read_intlist(char *s, int *n, int d);
 size_t rand_size_t();
 float rand_normal();
 float rand_uniform(float min, float max);
+
+// Taken from list.h
+void list_insert(list *, void *);
+list *make_list();
+
+//Taken from option_list.h
+int read_option(char *s, list *options);
+char *option_find(list *l, char *key);
+float option_find_float(list *l, char *key, float def);
+float option_find_float_quiet(list *l, char *key, float def);
+void option_unused(list *l);
 
 //Taken from utils.h
 char *copy_string(char *s);

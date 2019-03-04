@@ -457,9 +457,9 @@ int resize_network(network *net, int w, int h)
     }
     image def = {0};
     return def;
-} */
+}
 
-/* image get_network_image(network *net)
+image get_network_image(network *net)
 {
     int i;
     for(i = net->n-1; i >= 0; --i){
@@ -470,7 +470,7 @@ int resize_network(network *net, int w, int h)
     return def;
 } */
 
-/* void visualize_network(network *net)
+void visualize_network(network *net)
 {
     image *prev = 0;
     int i;
@@ -482,7 +482,7 @@ int resize_network(network *net, int w, int h)
             prev = visualize_convolutional_layer(l, buff, prev);
         }
     } 
-} */
+}
 
 void top_predictions(network *net, int k, int *index)
 {
