@@ -2,8 +2,7 @@
 #define ISEG_LAYER_H
 
 #include "darknet.h"
-#include "layer.h"
-#include "network.h"
+#include <math.h>
 
 layer make_iseg_layer(int batch, int w, int h, int classes, int ids);
 void forward_iseg_layer(const layer l, network net);

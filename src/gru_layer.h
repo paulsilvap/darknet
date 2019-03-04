@@ -2,9 +2,10 @@
 #ifndef GRU_LAYER_H
 #define GRU_LAYER_H
 
-#include "activations.h"
-#include "layer.h"
-#include "network.h"
+// #include "activations.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 
 layer make_gru_layer(int batch, int inputs, int outputs, int steps, int batch_normalize, int adam);
 

@@ -1,8 +1,8 @@
 #ifndef DETECTION_LAYER_H
 #define DETECTION_LAYER_H
 
-#include "layer.h"
-#include "network.h"
+#include <math.h>
+#include "darknet.h"
 
 typedef layer detection_layer;
 

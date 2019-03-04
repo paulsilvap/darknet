@@ -1,11 +1,4 @@
 #include "data.h"
-#include "utils.h"
-#include "image.h"
-#include "cuda.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 

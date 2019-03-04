@@ -2,8 +2,8 @@
 #define REGION_LAYER_H
 
 #include "darknet.h"
-#include "layer.h"
-#include "network.h"
+#include "tree.h"
+#include <math.h>
 
 layer make_region_layer(int batch, int w, int h, int n, int classes, int coords);
 void forward_region_layer(const layer l, network net);

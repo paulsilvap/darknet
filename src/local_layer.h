@@ -1,11 +1,8 @@
 #ifndef LOCAL_LAYER_H
 #define LOCAL_LAYER_H
 
-#include "cuda.h"
-#include "image.h"
-#include "activations.h"
-#include "layer.h"
-#include "network.h"
+#include <math.h>
+#include "darknet.h"
 
 typedef layer local_layer;
 

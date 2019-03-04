@@ -1,7 +1,8 @@
 #ifndef COST_LAYER_H
 #define COST_LAYER_H
-#include "layer.h"
-#include "network.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 
 typedef layer cost_layer;
 

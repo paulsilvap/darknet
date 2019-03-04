@@ -1,9 +1,10 @@
 #ifndef CROP_LAYER_H
 #define CROP_LAYER_H
 
-#include "image.h"
-#include "layer.h"
-#include "network.h"
+// #include "image.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 
 typedef layer crop_layer;
 

@@ -3,12 +3,6 @@
 #define NETWORK_H
 #include "darknet.h"
 
-#include "image.h"
-#include "layer.h"
-#include "data.h"
-#include "tree.h"
-
-
 #ifdef GPU
 void pull_network_output(network *net);
 #endif

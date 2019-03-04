@@ -1,15 +1,11 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <assert.h>
+#include "parser.h"
 
 #include "activation_layer.h"
 #include "logistic_layer.h"
 #include "l2norm_layer.h"
-#include "activations.h"
 #include "avgpool_layer.h"
 #include "batchnorm_layer.h"
-#include "blas.h"
 #include "connected_layer.h"
 #include "deconvolutional_layer.h"
 #include "convolutional_layer.h"
@@ -19,12 +15,9 @@
 #include "detection_layer.h"
 #include "dropout_layer.h"
 #include "gru_layer.h"
-#include "list.h"
 #include "local_layer.h"
 #include "maxpool_layer.h"
 #include "normalization_layer.h"
-#include "option_list.h"
-#include "parser.h"
 #include "region_layer.h"
 #include "yolo_layer.h"
 #include "iseg_layer.h"
@@ -35,7 +28,6 @@
 #include "shortcut_layer.h"
 #include "softmax_layer.h"
 #include "lstm_layer.h"
-#include "utils.h"
 
 typedef struct{
     char *type;

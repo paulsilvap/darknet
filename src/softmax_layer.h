@@ -1,7 +1,8 @@
 #ifndef SOFTMAX_LAYER_H
 #define SOFTMAX_LAYER_H
-#include "layer.h"
-#include "network.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 
 typedef layer softmax_layer;
 

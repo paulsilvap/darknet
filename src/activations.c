@@ -1,9 +1,9 @@
 #include "activations.h"
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// #include <math.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
 
 char *get_activation_string(ACTIVATION a)
 {

@@ -1,7 +1,7 @@
 #include "box.h"
-#include <stdio.h>
+// #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 
 int nms_comparator(const void *pa, const void *pb)
 {

@@ -2,9 +2,10 @@
 #ifndef RNN_LAYER_H
 #define RNN_LAYER_H
 
-#include "activations.h"
-#include "layer.h"
-#include "network.h"
+// #include "activations.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 #define USET
 
 layer make_rnn_layer(int batch, int inputs, int outputs, int steps, ACTIVATION activation, int batch_normalize, int adam);

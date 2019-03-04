@@ -1,7 +1,8 @@
-#include "layer.h"
-#include "cuda.h"
+// #include "layer.h"
+// #include "cuda.h"
+#include "darknet.h"
 
-#include <stdlib.h>
+// #include <stdlib.h>
 
 void free_layer(layer l)
 {

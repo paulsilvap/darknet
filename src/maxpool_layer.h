@@ -1,10 +1,12 @@
 #ifndef MAXPOOL_LAYER_H
 #define MAXPOOL_LAYER_H
 
-#include "image.h"
-#include "cuda.h"
-#include "layer.h"
-#include "network.h"
+// #include "image.h"
+// #include "cuda.h"
+// #include "layer.h"
+// #include "network.h"
+#include <float.h>
+#include "darknet.h"
 
 typedef layer maxpool_layer;
 

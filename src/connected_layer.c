@@ -1,15 +1,10 @@
 #include "connected_layer.h"
 #include "convolutional_layer.h"
 #include "batchnorm_layer.h"
-#include "utils.h"
-#include "cuda.h"
 #include "blas.h"
 #include "gemm.h"
 
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activation, int batch_normalize, int adam)
 {

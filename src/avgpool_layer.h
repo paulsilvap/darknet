@@ -1,10 +1,11 @@
 #ifndef AVGPOOL_LAYER_H
 #define AVGPOOL_LAYER_H
 
-#include "image.h"
-#include "cuda.h"
-#include "layer.h"
-#include "network.h"
+// #include "image.h"
+// #include "cuda.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h" 
 
 typedef layer avgpool_layer;
 

@@ -8,6 +8,7 @@
 *.a
 *.so
 *.weights
+*.backup
 backup/
 old/
 mnist/

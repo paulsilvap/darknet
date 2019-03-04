@@ -1,9 +1,10 @@
 #ifndef LSTM_LAYER_H
 #define LSTM_LAYER_H
 
-#include "activations.h"
-#include "layer.h"
-#include "network.h"
+// #include "activations.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 #define USET
 
 layer make_lstm_layer(int batch, int inputs, int outputs, int steps, int batch_normalize, int adam);

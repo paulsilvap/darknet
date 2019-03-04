@@ -1,11 +1,12 @@
 #ifndef DECONVOLUTIONAL_LAYER_H
 #define DECONVOLUTIONAL_LAYER_H
 
-#include "cuda.h"
-#include "image.h"
-#include "activations.h"
-#include "layer.h"
-#include "network.h"
+// #include "cuda.h"
+// #include "image.h"
+// #include "activations.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 
 #ifdef GPU
 void forward_deconvolutional_layer_gpu(layer l, network net);

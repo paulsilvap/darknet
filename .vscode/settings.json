@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "blas.h": "c",
+        "utils.h": "c",
+        "crop_layer.h": "c"
+    }
+}

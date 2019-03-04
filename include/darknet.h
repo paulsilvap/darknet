@@ -22,6 +22,7 @@ extern "C" {
 #endif
 
 #define SECRET_NUM -1234
+#define TWO_PI 6.2831853071795864769252866f
 extern int gpu_index;
 
 typedef struct{
@@ -516,6 +517,11 @@ typedef struct{
     float x, y, w, h;
 } box;
 
+//Added from box.h
+typedef struct{
+    float dx, dy, dw, dh;
+} dbox;
+
 typedef struct detection{
     box bbox;
     int classes;
@@ -601,6 +607,12 @@ typedef struct list{
     node *back;
 } list;
 
+typedef struct{
+    char *key;
+    char *val;
+    int used;
+} kvp;
+
 pthread_t load_data(load_args args);
 list *read_data_cfg(char *filename);
 list *read_cfg(char *filename);
@@ -644,6 +656,17 @@ float train_networks(network **nets, int n, data d, int interval);
 void sync_nets(network **nets, int n, int interval);
 void harmless_update_network_gpu(network *net);
 #endif
+
+// Taken from activations.h
+void gradient_array(const float *x, const int n, const ACTIVATION a, float *delta);
+void activate_array(float *x, const int n, const ACTIVATION a);
+#ifdef GPU
+void softmax_gpu(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output);
+void softmax_tree(float *input, int spatial, int batch, int stride, float temp, float *output, tree hier);
+void activate_array_gpu(float *x, int n, ACTIVATION a);
+void gradient_array_gpu(float *x, int n, ACTIVATION a, float *delta);
+#endif
+
 image get_label(image **characters, char *string, int size);
 void draw_label(image a, int r, int c, image label, const float *rgb);
 void save_image(image im, const char *name);
@@ -661,6 +684,11 @@ float matrix_topk_accuracy(matrix truth, matrix guess, int k);
 void matrix_add_matrix(matrix from, matrix to);
 void scale_matrix(matrix m, float scale);
 matrix csv_to_matrix(char *filename);
+// Taken from matrix.h
+matrix copy_matrix(matrix m);
+matrix resize_matrix(matrix m, int size);
+float *pop_column(matrix *m, int c);
+
 float *network_accuracies(network *net, data d, int n);
 float train_network_datum(network *net);
 image make_random_image(int w, int h, int c);
@@ -729,6 +757,8 @@ double what_time_is_it_now();
 image rotate_image(image m, float rad);
 // void visualize_network(network *net);
 float box_iou(box a, box b);
+// Added from box.h
+float box_rmse(box a, box b);
 data load_all_cifar10();
 box_label *read_boxes(char *filename, int *n);
 box float_to_box(float *f, int stride);
@@ -779,6 +809,9 @@ char *fgetl(FILE *fp);
 void strip(char *s);
 float sec(clock_t clocks);
 void **list_to_array(list *l);
+// Taken from list.h
+void list_insert(list *, void *);
+list *make_list();
 void top_k(float *a, int n, int k, int *index);
 int *read_map(char *filename);
 void error(const char *s);
@@ -798,6 +831,30 @@ int *read_intlist(char *s, int *n, int d);
 size_t rand_size_t();
 float rand_normal();
 float rand_uniform(float min, float max);
+
+//Taken from utils.h
+char *copy_string(char *s);
+void file_error(char *s);
+float constrain(float min, float max, float a);
+char int_to_alphanum(int i);
+int alphanum_to_int(char c);
+float **one_hot_encode(float *a, int n, int k);
+void translate_array(float *a, int n, float s);
+int constrain_int(int a, int min, int max);
+int rand_int(int min, int max);
+float dist_array(float *a, float *b, int n, int sub);
+float rand_scale(float s);
+void print_statistics(float *a, int n);
+
+//Taken from image.h
+image random_augment_image(image im, float angle, float aspect, int low, int high, int w, int h);
+image rotate_crop_image(image im, float rad, float s, int w, int h, float dx, float dy, float aspect);
+augment_args random_augment_args(image im, float angle, float aspect, int low, int high, int w, int h);
+image random_crop_image(image im, int w, int h);
+void place_image(image im, int w, int h, int dx, int dy, image canvas);
+image collapse_image_layers(image source, int border);
+void show_images(image *ims, int n, char *window);
+void scale_image(image m, float s);
 
 #ifdef __cplusplus
 }

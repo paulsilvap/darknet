@@ -1,9 +1,10 @@
 #ifndef CONNECTED_LAYER_H
 #define CONNECTED_LAYER_H
 
-#include "activations.h"
-#include "layer.h"
-#include "network.h"
+// #include "activations.h"
+// #include "layer.h"
+// #include "network.h"
+#include "darknet.h"
 
 layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activation, int batch_normalize, int adam);
 

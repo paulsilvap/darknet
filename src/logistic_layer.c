@@ -1,12 +1,12 @@
 #include "logistic_layer.h"
-#include "activations.h"
+// #include "activations.h"
 #include "blas.h"
-#include "cuda.h"
+// #include "cuda.h"
 
 #include <float.h>
 #include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
+// #include <stdlib.h>
+// #include <stdio.h>
 #include <assert.h>
 
 layer make_logistic_layer(int batch, int inputs)
