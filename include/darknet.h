@@ -856,6 +856,13 @@ image collapse_image_layers(image source, int border);
 void show_images(image *ims, int n, char *window);
 void scale_image(image m, float s);
 
+//Taken from network.h
+network *make_network(int n);
+
+//Taken from tree.h
+int hierarchy_top_prediction(float *predictions, tree *hier, float thresh, int stride);
+float get_hierarchy_probability(float *x, tree *hier, int c, int stride);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "tree.h"
-#include "utils.h"
-#include "data.h"
+#include "darknet.h"
 
 void change_leaves(tree *t, char *leaf_list)
 {

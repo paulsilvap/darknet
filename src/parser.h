@@ -1,7 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include "darknet.h"
-#include "network.h"
+// #include "network.h"
 #include "option_list.h"
 #include "activations.h"
 

@@ -2,7 +2,6 @@
 #define REGION_LAYER_H
 
 #include "darknet.h"
-#include "tree.h"
 #include <math.h>
 
 layer make_region_layer(int batch, int w, int h, int n, int classes, int coords);
