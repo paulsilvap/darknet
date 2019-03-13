@@ -1,8 +1,4 @@
 #include "dropout_layer.h"
-#include "utils.h"
-#include "cuda.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 dropout_layer make_dropout_layer(int batch, int inputs, float probability)
 {

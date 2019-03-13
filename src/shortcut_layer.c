@@ -1,9 +1,6 @@
 #include "shortcut_layer.h"
-#include "cuda.h"
-#include "blas.h"
 #include "activations.h"
 
-#include <stdio.h>
 #include <assert.h>
 
 layer make_shortcut_layer(int batch, int index, int w, int h, int c, int w2, int h2, int c2)

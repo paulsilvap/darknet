@@ -2,8 +2,7 @@
 #define YOLO_LAYER_H
 
 #include "darknet.h"
-// #include "layer.h"
-// #include "network.h"
+#include <math.h>
 
 layer make_yolo_layer(int batch, int w, int h, int n, int total, int *mask, int classes);
 void forward_yolo_layer(const layer l, network net);

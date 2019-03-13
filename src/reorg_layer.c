@@ -1,9 +1,5 @@
 #include "reorg_layer.h"
-#include "cuda.h"
 #include "blas.h"
-
-#include <stdio.h>
-
 
 layer make_reorg_layer(int batch, int w, int h, int c, int stride, int reverse, int flatten, int extra)
 {

@@ -136,6 +136,13 @@ void print_weights(char *cfgfile, char *weightfile, int n)
     //printf("]");
 }
 
+void partial(char *cfgfile, char *weightfile, char *outfile, int max)
+{
+    gpu_index = -1;
+    network *net = load_network(cfgfile, weightfile, 1);
+    save_weights_upto(net, outfile, max);
+}
+
 void tiny(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top)
 {
     network *net = load_network(cfgfile, weightfile, 0);
@@ -223,10 +230,13 @@ int main(int argc, char **argv)
         // Show speed metrics, sort of
         speed(argv[2], (argc > 3 && argv[3]) ? atoi(argv[3]) : 0);
     } else if (0 == strcmp(argv[1], "tiny")){
+        // Run tiny darknet version
         tiny("cfg/imagenet1k.data", argv[2], argv[3], argv[4], 5);
     } else if (0 == strcmp(argv[1], "print")){
         // Print the value of the weights
         print_weights(argv[2], argv[3], atoi(argv[4]));
+    } else if (0 == strcmp(argv[1], "partial")){
+        partial(argv[2], argv[3], argv[4], atoi(argv[5]));
     } else if (0 == strcmp(argv[1], "visualize")){
         // Visualize activations in all the layers in binary matrix form
         visualize(argv[2], (argc > 3) ? argv[3] : 0);

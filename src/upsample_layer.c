@@ -1,8 +1,5 @@
 #include "upsample_layer.h"
-#include "cuda.h"
 #include "blas.h"
-
-#include <stdio.h>
 
 layer make_upsample_layer(int batch, int w, int h, int c, int stride)
 {

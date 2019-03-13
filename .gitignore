@@ -7,8 +7,7 @@
 *.pyc
 *.a
 *.so
-*.weights
-*.backup
+.vscode/
 backup/
 old/
 mnist/
@@ -21,6 +20,7 @@ convnet/
 decaf/
 submission/
 cfg/
+weights/
 darknet
 .fuse*
 
@@ -30,4 +30,3 @@ ehthumbs.db
 Icon?
 Thumbs.db
 *.swp
-darknet53.conv.74

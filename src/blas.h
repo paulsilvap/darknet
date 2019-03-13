@@ -20,7 +20,6 @@ void pow_cpu(int N, float ALPHA, float *X, int INCX, float *Y, int INCY);
 void mul_cpu(int N, float *X, int INCX, float *Y, int INCY);
 
 int test_gpu_blas();
-void shortcut_cpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out);
 
 void mean_cpu(float *x, int batch, int filters, int spatial, float *mean);
 void variance_cpu(float *x, float *mean, int batch, int filters, int spatial, float *variance);
@@ -41,7 +40,6 @@ void weighted_sum_cpu(float *a, float *b, float *s, int num, float *c);
 void weighted_delta_cpu(float *a, float *b, float *s, float *da, float *db, float *ds, int n, float *dc);
 
 void softmax(float *input, int n, float temp, int stride, float *output);
-void softmax_cpu(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output);
 void upsample_cpu(float *in, int w, int h, int c, int batch, int stride, int forward, float scale, float *out);
 
 #ifdef GPU
@@ -71,7 +69,6 @@ void fast_variance_delta_gpu(float *x, float *delta, float *mean, float *varianc
 
 void fast_variance_gpu(float *x, float *mean, int batch, int filters, int spatial, float *variance);
 void fast_mean_gpu(float *x, int batch, int filters, int spatial, float *mean);
-void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out);
 void scale_bias_gpu(float *output, float *biases, int batch, int n, int size);
 void backward_scale_gpu(float *x_norm, float *delta, int batch, int n, int size, float *scale_updates);
 void scale_bias_gpu(float *output, float *biases, int batch, int n, int size);

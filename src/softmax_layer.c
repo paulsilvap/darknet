@@ -1,11 +1,8 @@
 #include "softmax_layer.h"
 #include "blas.h"
-#include "cuda.h"
 
 #include <float.h>
 #include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 
 softmax_layer make_softmax_layer(int batch, int inputs, int groups)

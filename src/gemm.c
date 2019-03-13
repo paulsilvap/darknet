@@ -1,8 +1,5 @@
 #include "gemm.h"
-#include "utils.h"
 #include "cuda.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 
 void gemm_bin(int M, int N, int K, float ALPHA, 

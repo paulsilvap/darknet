@@ -31,7 +31,6 @@ int count_fields(char *line);
 float *parse_fields(char *line, int n);
 void mean_arrays(float **a, int n, int els, float *avg);
 float sec(clock_t clocks);
-int int_index(int *a, int val, int n);
 
 #endif
 

@@ -3,9 +3,7 @@
 #include <math.h>
 #include <assert.h>
 #include <float.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 void reorg_cpu(float *x, int w, int h, int c, int batch, int stride, int forward, float *out)
 {
     int b,i,j,k;

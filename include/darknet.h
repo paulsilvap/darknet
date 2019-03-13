@@ -657,13 +657,13 @@ void sync_nets(network **nets, int n, int interval);
 void harmless_update_network_gpu(network *net);
 #endif
 
-// Taken from activations.h
-ACTIVATION get_activation(char *s);
-void gradient_array(const float *x, const int n, const ACTIVATION a, float *delta);
-void activate_array(float *x, const int n, const ACTIVATION a);
+
 #ifdef GPU
+// Taken from blas.h
+void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out);
 void softmax_gpu(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output);
 void softmax_tree(float *input, int spatial, int batch, int stride, float temp, float *output, tree hier);
+// Taken from activations.h
 void activate_array_gpu(float *x, int n, ACTIVATION a);
 void gradient_array_gpu(float *x, int n, ACTIVATION a, float *delta);
 #endif
@@ -841,6 +841,7 @@ float option_find_float_quiet(list *l, char *key, float def);
 void option_unused(list *l);
 
 //Taken from utils.h
+int int_index(int *a, int val, int n);
 char *copy_string(char *s);
 void file_error(char *s);
 float constrain(float min, float max, float a);
@@ -870,6 +871,14 @@ network *make_network(int n);
 //Taken from tree.h
 int hierarchy_top_prediction(float *predictions, tree *hier, float thresh, int stride);
 float get_hierarchy_probability(float *x, tree *hier, int c, int stride);
+
+//Taken from blas.h
+void shortcut_cpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out);
+void softmax_cpu(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output);
+
+//Taken from convolotional_layer.h
+void add_bias(float *output, float *biases, int batch, int n, int size);
+void backward_bias(float *bias_updates, float *delta, int batch, int n, int size);
 
 #ifdef __cplusplus
 }

@@ -1,14 +1,6 @@
 #include "yolo_layer.h"
-#include "activations.h"
-#include "blas.h"
-#include "box.h"
-#include "cuda.h"
-#include "utils.h"
 
-#include <stdio.h>
 #include <assert.h>
-#include <string.h>
-#include <stdlib.h>
 
 layer make_yolo_layer(int batch, int w, int h, int n, int total, int *mask, int classes)
 {

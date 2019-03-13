@@ -1,12 +1,8 @@
 #ifndef CONVOLUTIONAL_LAYER_H
 #define CONVOLUTIONAL_LAYER_H
 
-// #include "cuda.h"
-// #include "image.h"
-// #include "activations.h"
-// #include "layer.h"
-// #include "network.h"
 #include "darknet.h"
+#include <math.h>
 
 typedef layer convolutional_layer;
 
@@ -36,9 +32,6 @@ void swap_binary(convolutional_layer *l);
 void binarize_weights2(float *weights, int n, int size, char *binary, float *scales);
 
 void backward_convolutional_layer(convolutional_layer layer, network net);
-
-void add_bias(float *output, float *biases, int batch, int n, int size);
-void backward_bias(float *bias_updates, float *delta, int batch, int n, int size);
 
 image get_convolutional_image(convolutional_layer layer);
 image get_convolutional_delta(convolutional_layer layer);
