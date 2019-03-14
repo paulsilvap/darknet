@@ -22,6 +22,14 @@ void cudnn_convolutional_setup(layer *l);
 #endif
 #endif
 
+void rescale_weights(layer l, float scale, float trans);
+void statistics_connected_layer(layer l);
+void denormalize_convolutional_layer(layer l);
+void denormalize_connected_layer(layer l);
+void rgbgr_weights(layer l);
+image *get_weights(layer l);
+void add_bias(float *output, float *biases, int batch, int n, int size);
+void backward_bias(float *bias_updates, float *delta, int batch, int n, int size);
 convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int n, int groups, int size, int stride, int padding, ACTIVATION activation, int batch_normalize, int binary, int xnor, int adam);
 void resize_convolutional_layer(convolutional_layer *layer, int w, int h);
 void forward_convolutional_layer(const convolutional_layer layer, network net);

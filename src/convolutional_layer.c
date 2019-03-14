@@ -595,13 +595,7 @@ image *get_weights(convolutional_layer l)
     for(i = 0; i < l.n; ++i){
         weights[i] = copy_image(get_convolutional_weight(l, i));
         normalize_image(weights[i]);
-        /*
-           char buff[256];
-           sprintf(buff, "filter%d", i);
-           save_image(weights[i], buff);
-         */
     }
-    //error("hey");
     return weights;
 }
 
