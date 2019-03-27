@@ -608,10 +608,10 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
 
 // In parser.c
 list *read_cfg(char *filename);
-network *parse_network_cfg(char *filename);
-void save_weights(network *net, char *filename);
+network parse_network_cfg(char *filename);
+void save_weights(network net, char *filename);
 void load_weights(network *net, char *filename);
-void save_weights_upto(network *net, char *filename, int cutoff);
+void save_weights_upto(network net, char *filename, int cutoff);
 void load_weights_upto(network *net, char *filename, int start, int cutoff);
 
 // In box.c
@@ -639,8 +639,8 @@ pthread_t load_data(load_args args);
 data resize_data(data orig, int w, int h);
 data *tile_data(data orig, int divs, int size);
 data select_data(data *orig, int *inds);
-void forward_network(network *net);
-void backward_network(network *net);
+void forward_network(network net);
+void backward_network(network net);
 void get_next_batch(data d, int n, int offset, float *X, float *y);
 data concat_data(data d1, data d2);
 data load_cifar10_data(char *filename);
@@ -716,27 +716,27 @@ image rotate_image(image m, float rad);
 void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes);
 
 // In network.c
-network *load_network(char *cfg, char *weights, int clear);
+network load_network(char *cfg, char *weights, int clear);
 load_args get_base_args(network *net);
 float network_accuracy(network *net, data d);
-float *network_accuracies(network *net, data d, int n);
-float train_network_datum(network *net);
+float *network_accuracies(network net, data d, int n);
+float train_network_datum(network net);
 void free_network(network *net);
 void set_batch_network(network *net, int b);
-float get_current_rate(network *net);
-layer get_network_output_layer(network *net);
+float get_current_rate(network net);
+layer get_network_output_layer(network net);
 void top_predictions(network *net, int n, int *index);
-network *make_network(int n);
-float train_network(network *net, data d);
+network make_network(int n);
+float train_network(network net, data d);
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num);
 void free_detections(detection *dets, int n);
 int network_width(network *net);
 int network_height(network *net);
-matrix network_predict_data(network *net, data test);
-float *network_predict(network *net, float *input);
-void visualize_network(network *net);
-size_t get_current_batch(network *net);
-int resize_network(network *net, int w, int h);
+matrix network_predict_data(network net, data test);
+float *network_predict(network net, float *input);
+void visualize_network(network net);
+size_t get_current_batch(network net);
+int resize_network(network net, int w, int h);
 
 // In tree.c
 tree *read_tree(char *filename);

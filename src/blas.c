@@ -145,6 +145,12 @@ void l2normalize_cpu(float *x, float *dx, int batch, int filters, int spatial)
 void normalize_cpu(float *x, float *mean, float *variance, int batch, int filters, int spatial)
 {
     int b, f, i;
+    // printf("%f \n",mean[filters-1]);
+    // printf("%f \n",variance[filters-1]);
+    // printf("%i \n",filters);
+    // printf("%f \n",(x[3379] - mean[filters-1])/(sqrt(variance[filters-1]) + .000001f));
+    // printf("%f \n",(x[0] - mean[0])/(sqrt(variance[0]) + .000001f));
+    // printf("%f, %f, %f, %f \n",x[0],mean[0],variance[0],sqrt(variance[0]));
     for(b = 0; b < batch; ++b){
         for(f = 0; f < filters; ++f){
             for(i = 0; i < spatial; ++i){
@@ -153,6 +159,7 @@ void normalize_cpu(float *x, float *mean, float *variance, int batch, int filter
             }
         }
     }
+    // printf("%f \n",x[3379]);
 }
 
 void const_cpu(int N, float ALPHA, float *X, int INCX)

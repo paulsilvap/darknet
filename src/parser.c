@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdint.h>
 #include "parser.h"
 
 #include "activations.h"
@@ -93,7 +94,7 @@ typedef struct size_params{
     int c;
     int index;
     int time_steps;
-    network *net;
+    network net;
 } size_params;
 
 local_layer parse_local(list *options, size_params params)
@@ -140,7 +141,7 @@ convolutional_layer parse_convolutional(list *options, size_params params)
     int binary = option_find_int_quiet(options, "binary", 0);
     int xnor = option_find_int_quiet(options, "xnor", 0);
 
-    convolutional_layer layer = make_convolutional_layer(batch,h,w,c,n,groups,size,stride,padding,activation, batch_normalize, binary, xnor, params.net->adam);
+    convolutional_layer layer = make_convolutional_layer(batch,h,w,c,n,groups,size,stride,padding,activation, batch_normalize, binary, xnor, params.net.adam);
     layer.flipped = option_find_int_quiet(options, "flipped", 0);
     layer.dot = option_find_float_quiet(options, "dot", 0);
 
@@ -154,7 +155,7 @@ layer parse_connected(list *options, size_params params)
     ACTIVATION activation = get_activation(activation_s);
     int batch_normalize = option_find_int_quiet(options, "batch_normalize", 0);
 
-    layer l = make_connected_layer(params.batch, params.inputs, output, activation, batch_normalize, params.net->adam);
+    layer l = make_connected_layer(params.batch, params.inputs, output, activation, batch_normalize, params.net.adam);
     return l;
 }
 
@@ -378,14 +379,14 @@ dropout_layer parse_dropout(list *options, size_params params)
     return layer;
 }
 
-layer parse_shortcut(list *options, size_params params, network *net)
+layer parse_shortcut(list *options, size_params params, network net)
 {
     char *l = option_find(options, "from");
     int index = atoi(l);
     if(index < 0) index = params.index + index;
 
     int batch = params.batch;
-    layer from = net->layers[index];
+    layer from = net.layers[index];
 
     layer s = make_shortcut_layer(batch, index, params.w, params.h, params.c, from.out_w, from.out_h, from.out_c);
 
@@ -397,7 +398,7 @@ layer parse_shortcut(list *options, size_params params, network *net)
     return s;
 }
 
-layer parse_upsample(list *options, size_params params, network *net)
+layer parse_upsample(list *options, size_params params, network net)
 {
 
     int stride = option_find_int(options, "stride",2);
@@ -406,7 +407,7 @@ layer parse_upsample(list *options, size_params params, network *net)
     return l;
 }
 
-route_layer parse_route(list *options, size_params params, network *net)
+route_layer parse_route(list *options, size_params params, network net)
 {
     char *l = option_find(options, "layers");
     int len = strlen(l);
@@ -424,19 +425,19 @@ route_layer parse_route(list *options, size_params params, network *net)
         l = strchr(l, ',')+1;
         if(index < 0) index = params.index + index;
         layers[i] = index;
-        sizes[i] = net->layers[index].outputs;
+        sizes[i] = net.layers[index].outputs;
     }
     int batch = params.batch;
 
     route_layer layer = make_route_layer(batch, n, layers, sizes);
 
-    convolutional_layer first = net->layers[layers[0]];
+    convolutional_layer first = net.layers[layers[0]];
     layer.out_w = first.out_w;
     layer.out_h = first.out_h;
     layer.out_c = first.out_c;
     for(i = 1; i < n; ++i){
         int index = layers[i];
-        convolutional_layer next = net->layers[index];
+        convolutional_layer next = net.layers[index];
         if(next.out_w == first.out_w && next.out_h == first.out_h){
             layer.out_c += next.out_c;
         }else{
@@ -547,26 +548,29 @@ int is_network(section *s)
             || strcmp(s->type, "[network]")==0);
 }
 
-network *parse_network_cfg(char *filename)
+network parse_network_cfg(char *filename)
 {
     list *sections = read_cfg(filename);
     node *n = sections->front;
     if(!n) error("Config file has no sections");
-    network *net = make_network(sections->size - 1);
-    net->gpu_index = gpu_index;
+    network net = make_network(sections->size - 1);
+    net.gpu_index = gpu_index;
     size_params params;
 
     section *s = (section *)n->val;
     list *options = s->options;
     if(!is_network(s)) error("First section must be [net] or [network]");
-    parse_net_options(options, net);
+    parse_net_options(options, &net);
 
-    params.h = net->h;
-    params.w = net->w;
-    params.c = net->c;
-    params.inputs = net->inputs;
-    params.batch = net->batch;
-    params.time_steps = net->time_steps;
+    params.h = net.h;
+    params.w = net.w;
+    params.c = net.c;
+    net.batch = 1;
+    net.time_steps = 1;
+    if (net.batch < net.time_steps) net.batch = net.time_steps;
+    params.inputs = net.inputs;
+    params.batch = net.batch;
+    params.time_steps = net.time_steps;
     params.net = net;
 
     size_t workspace_size = 0;
@@ -597,7 +601,7 @@ network *parse_network_cfg(char *filename)
             l = parse_detection(options, params);
         }else if(lt == SOFTMAX){
             l = parse_softmax(options, params);
-            net->hierarchy = l.softmax_tree;
+            net.hierarchy = l.softmax_tree;
         }else if(lt == MAXPOOL){
             l = parse_maxpool(options, params);
         }else if(lt == REORG){
@@ -612,8 +616,8 @@ network *parse_network_cfg(char *filename)
             l = parse_shortcut(options, params, net);
         }else if(lt == DROPOUT){
             l = parse_dropout(options, params);
-            l.output = net->layers[count-1].output;
-            l.delta = net->layers[count-1].delta;
+            l.output = net.layers[count-1].output;
+            l.delta = net.layers[count-1].delta;
             #ifdef GPU
             l.output_gpu = net->layers[count-1].output_gpu;
             l.delta_gpu = net->layers[count-1].delta_gpu;
@@ -621,7 +625,7 @@ network *parse_network_cfg(char *filename)
         }else{
             fprintf(stderr, "Type not recognized: %s\n", s->type);
         }
-        l.clip = net->clip;
+        l.clip = net.clip;
         l.truth = option_find_int_quiet(options, "truth", 0);
         l.onlyforward = option_find_int_quiet(options, "onlyforward", 0);
         l.stopbackward = option_find_int_quiet(options, "stopbackward", 0);
@@ -632,7 +636,7 @@ network *parse_network_cfg(char *filename)
         l.learning_rate_scale = option_find_float_quiet(options, "learning_rate", 1);
         l.smooth = option_find_float_quiet(options, "smooth", 0);
         option_unused(options);
-        net->layers[count] = l;
+        net.layers[count] = l;
         if (l.workspace_size > workspace_size) workspace_size = l.workspace_size;
         free_section(s);
         n = n->next;
@@ -646,12 +650,12 @@ network *parse_network_cfg(char *filename)
     }
     free_list(sections);
     layer out = get_network_output_layer(net);
-    net->outputs = out.outputs;
-    net->truths = out.outputs;
-    if(net->layers[net->n-1].truths) net->truths = net->layers[net->n-1].truths;
-    net->output = out.output;
-    net->input = calloc(net->inputs*net->batch, sizeof(float));
-    net->truth = calloc(net->truths*net->batch, sizeof(float));
+    net.outputs = out.outputs;
+    net.truths = out.outputs;
+    if(net.layers[net.n-1].truths) net.truths = net.layers[net.n-1].truths;
+    net.output = out.output;
+    net.input = calloc(net.inputs*net.batch, sizeof(float));
+    net.truth = calloc(net.truths*net.batch, sizeof(float));
     #ifdef GPU
     net->output_gpu = out.output_gpu;
     net->input_gpu = cuda_make_array(net->input, net->inputs*net->batch);
@@ -665,7 +669,7 @@ network *parse_network_cfg(char *filename)
             net->workspace = calloc(1, workspace_size);
         }
         #else
-        net->workspace = calloc(1, workspace_size);
+        net.workspace = calloc(1, workspace_size);
         #endif
     }
     return net;
@@ -677,15 +681,15 @@ list *read_cfg(char *filename)
     if(file == 0) file_error(filename);
     char *line;
     int nu = 0;
-    list *options = make_list();
+    list *sections = make_list();
     section *current = 0;
     while((line=fgetl(file)) != 0){
         ++ nu;
         strip(line);
         switch(line[0]){
             case '[':
-                current = malloc(sizeof(section));
-                list_insert(options, current);
+                current = (section*) malloc(sizeof(section));
+                list_insert(sections, current);
                 current->options = make_list();
                 current->type = line;
                 break;
@@ -703,7 +707,7 @@ list *read_cfg(char *filename)
         }
     }
     fclose(file);
-    return options;
+    return sections;
 }
 
 void save_convolutional_weights_binary(layer l, FILE *fp)
@@ -787,7 +791,7 @@ void save_connected_weights(layer l, FILE *fp)
     }
 }
 
-void save_weights_upto(network *net, char *filename, int cutoff)
+void save_weights_upto(network net, char *filename, int cutoff)
 {
 #ifdef GPU
     if(net->gpu_index >= 0){
@@ -804,11 +808,11 @@ void save_weights_upto(network *net, char *filename, int cutoff)
     fwrite(&major, sizeof(int), 1, fp);
     fwrite(&minor, sizeof(int), 1, fp);
     fwrite(&revision, sizeof(int), 1, fp);
-    fwrite(net->seen, sizeof(size_t), 1, fp);
+    fwrite(net.seen, sizeof(size_t), 1, fp);
 
     int i;
-    for(i = 0; i < net->n && i < cutoff; ++i){
-        layer l = net->layers[i];
+    for(i = 0; i < net.n && i < cutoff; ++i){
+        layer l = net.layers[i];
         if (l.dontsave) continue;
         if(l.type == CONVOLUTIONAL){
             save_convolutional_weights(l, fp);
@@ -829,9 +833,9 @@ void save_weights_upto(network *net, char *filename, int cutoff)
     fclose(fp);
 }
 
-void save_weights(network *net, char *filename)
+void save_weights(network net, char *filename)
 {
-    save_weights_upto(net, filename, net->n);
+    save_weights_upto(net, filename, net.n);
 }
 
 void transpose_matrix(float *a, int rows, int cols)
@@ -914,13 +918,16 @@ void load_convolutional_weights(layer l, FILE *fp)
         //load_convolutional_weights_binary(l, fp);
         //return;
     }
+
     if(l.numload) l.n = l.numload;
     int num = l.c/l.groups*l.n*l.size*l.size;
     fread(l.biases, sizeof(float), l.n, fp);
+    printf("\n %f \n", l.biases[0]);
     if (l.batch_normalize && (!l.dontloadscales)){
         fread(l.scales, sizeof(float), l.n, fp);
         fread(l.rolling_mean, sizeof(float), l.n, fp);
         fread(l.rolling_variance, sizeof(float), l.n, fp);
+        printf("\n %f, %f, %f \n", l.scales[0], l.rolling_mean[0], l.rolling_variance[0]);
         if(0){
             int i;
             for(i = 0; i < l.n; ++i){
@@ -977,13 +984,27 @@ void load_weights_upto(network *net, char *filename, int start, int cutoff)
     fread(&major, sizeof(int), 1, fp);
     fread(&minor, sizeof(int), 1, fp);
     fread(&revision, sizeof(int), 1, fp);
-    if ((major*10 + minor) >= 2 && major < 1000 && minor < 1000){
-        fread(net->seen, sizeof(size_t), 1, fp);
-    } else {
-        int iseen = 0;
-        fread(&iseen, sizeof(int), 1, fp);
+    printf("\n %d, %d, %d \n", major, minor, revision);
+    // if ((major*10 + minor) >= 2 && major < 1000 && minor < 1000){
+    //     fread(net->seen, sizeof(size_t), 1, fp);
+    // } else {
+    //     int iseen = 0;
+    //     fread(&iseen, sizeof(int), 1, fp);
+    //     *net->seen = iseen;
+    // }
+    if ((major * 10 + minor) >= 2) {
+        // printf("\n seen 64 \n");
+        uint64_t iseen = 0;
+        fread(&iseen, sizeof(uint64_t), 1, fp);
         *net->seen = iseen;
     }
+    else {
+        // printf("\n seen 32 \n");
+        uint32_t iseen = 0;
+        fread(&iseen, sizeof(uint32_t), 1, fp);
+        *net->seen = iseen;
+    }
+
     int transpose = (major > 1000) || (minor > 1000);
 
     int i;

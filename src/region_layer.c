@@ -1,4 +1,5 @@
 #include "region_layer.h"
+#include "activations.h"
 
 #include <assert.h>
 

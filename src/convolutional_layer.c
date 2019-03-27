@@ -327,7 +327,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     return l;
 }
 
-void denormalize_convolutional_layer(convolutional_layer l)
+/* void denormalize_convolutional_layer(convolutional_layer l)
 {
     int i, j;
     for(i = 0; i < l.n; ++i){
@@ -340,7 +340,7 @@ void denormalize_convolutional_layer(convolutional_layer l)
         l.rolling_mean[i] = 0;
         l.rolling_variance[i] = 1;
     }
-}
+} */
 
 /*
 void test_convolutional_layer()
@@ -473,13 +473,11 @@ void forward_convolutional_layer(convolutional_layer l, network net)
             gemm(0,0,m,n,k,1,a,k,b,n,1,c,n);
         }
     }
-
     if(l.batch_normalize){
         forward_batchnorm_layer(l, net);
     } else {
         add_bias(l.output, l.biases, l.batch, l.n, l.out_h*l.out_w);
     }
-
     activate_array(l.output, l.outputs*l.batch, l.activation);
     if(l.binary || l.xnor) swap_binary(&l);
 }

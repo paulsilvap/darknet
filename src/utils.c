@@ -253,7 +253,7 @@ void error(const char *s)
     exit(-1);
 }
 
-unsigned char *read_file(char *filename)
+/* unsigned char *read_file(char *filename)
 {
     FILE *fp = fopen(filename, "rb");
     size_t size;
@@ -266,7 +266,7 @@ unsigned char *read_file(char *filename)
     fread(text, 1, size, fp);
     fclose(fp);
     return text;
-}
+} */
 
 void malloc_error()
 {
@@ -679,7 +679,7 @@ float rand_normal()
    }
  */
 
-size_t rand_size_t()
+/* size_t rand_size_t()
 {
     return  ((size_t)(rand()&0xff) << 56) | 
         ((size_t)(rand()&0xff) << 48) |
@@ -689,7 +689,7 @@ size_t rand_size_t()
         ((size_t)(rand()&0xff) << 16) |
         ((size_t)(rand()&0xff) << 8) |
         ((size_t)(rand()&0xff) << 0);
-}
+} */
 
 float rand_uniform(float min, float max)
 {

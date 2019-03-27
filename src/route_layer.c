@@ -34,10 +34,10 @@ route_layer make_route_layer(int batch, int n, int *input_layers, int *input_siz
     return l;
 }
 
-void resize_route_layer(route_layer *l, network *net)
+void resize_route_layer(route_layer *l, network net)
 {
     int i;
-    layer first = net->layers[l->input_layers[0]];
+    layer first = net.layers[l->input_layers[0]];
     l->out_w = first.out_w;
     l->out_h = first.out_h;
     l->out_c = first.out_c;
@@ -45,7 +45,7 @@ void resize_route_layer(route_layer *l, network *net)
     l->input_sizes[0] = first.outputs;
     for(i = 1; i < l->n; ++i){
         int index = l->input_layers[i];
-        layer next = net->layers[index];
+        layer next = net.layers[index];
         l->outputs += next.outputs;
         l->input_sizes[i] = next.outputs;
         if(next.out_w == first.out_w && next.out_h == first.out_h){

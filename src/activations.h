@@ -1,6 +1,7 @@
 #ifndef ACTIVATIONS_H
 #define ACTIVATIONS_H
 #include "darknet.h"
+#include "math.h"
 
 char *get_activation_string(ACTIVATION a);
 float activate(float x, ACTIVATION a);

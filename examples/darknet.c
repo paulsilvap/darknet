@@ -10,20 +10,20 @@ void average(int argc, char *argv[])
     char *cfgfile = argv[2];
     char *outfile = argv[3];
     gpu_index = -1;
-    network *net = parse_network_cfg(cfgfile);
-    network *sum = parse_network_cfg(cfgfile);
+    network net = parse_network_cfg(cfgfile);
+    network sum = parse_network_cfg(cfgfile);
 
     char *weightfile = argv[4];   
-    load_weights(sum, weightfile);
+    load_weights(&sum, weightfile);
 
     int i, j;
     int n = argc - 5;
     for(i = 0; i < n; ++i){
         weightfile = argv[i+5];   
-        load_weights(net, weightfile);
-        for(j = 0; j < net->n; ++j){
-            layer l = net->layers[j];
-            layer out = sum->layers[j];
+        load_weights(&net, weightfile);
+        for(j = 0; j < net.n; ++j){
+            layer l = net.layers[j];
+            layer out = sum.layers[j];
             if(l.type == CONVOLUTIONAL){
                 int num = l.n*l.c*l.size*l.size;
                 axpy_cpu(l.n, 1, l.biases, 1, out.biases, 1);
@@ -41,8 +41,8 @@ void average(int argc, char *argv[])
         }
     }
     n = n+1;
-    for(j = 0; j < net->n; ++j){
-        layer l = sum->layers[j];
+    for(j = 0; j < net.n; ++j){
+        layer l = sum.layers[j];
         if(l.type == CONVOLUTIONAL){
             int num = l.n*l.c*l.size*l.size;
             scal_cpu(l.n, 1./n, l.biases, 1);
@@ -99,20 +99,20 @@ long numops(network *net)
 void speed(char *cfgfile, int tics)
 {
     if (tics == 0) tics = 1000;
-    network *net = parse_network_cfg(cfgfile);
-    set_batch_network(net, 1);
+    network net = parse_network_cfg(cfgfile);
+    set_batch_network(&net, 1);
     int i;
     double time=what_time_is_it_now();
-    image im = make_image(net->w, net->h, net->c*net->batch);
+    image im = make_image(net.w, net.h, net.c*net.batch);
     for(i = 0; i < tics; ++i){
         network_predict(net, im.data);
     }
     double t = what_time_is_it_now() - time;
-    long ops = numops(net);
+    // long ops = numops(net);
     printf("\n%d evals, %f Seconds\n", tics, t);
-    printf("Floating Point Operations: %ld\n", ops);
-    printf("Floating Point Operations: %.2f Bn\n", (float)ops/1000000000.);
-    printf("FLOPS: %.2f Bn\n", (float)ops/1000000000.*tics/t);
+    // printf("Floating Point Operations: %ld\n", ops);
+    // printf("Floating Point Operations: %.2f Bn\n", (float)ops/1000000000.);
+    // printf("FLOPS: %.2f Bn\n", (float)ops/1000000000.*tics/t);
     printf("Speed: %f sec/eval\n", t/tics);
     printf("Speed: %f Hz\n", tics/t);
 }
@@ -120,8 +120,8 @@ void speed(char *cfgfile, int tics)
 void print_weights(char *cfgfile, char *weightfile, int n)
 {
     gpu_index = -1;
-    network *net = load_network(cfgfile, weightfile, 1);
-    layer l = net->layers[n];
+    network net = load_network(cfgfile, weightfile, 1);
+    layer l = net.layers[n];
     int i, j;
     //printf("[");
     for(i = 0; i < l.n; ++i){
@@ -139,14 +139,14 @@ void print_weights(char *cfgfile, char *weightfile, int n)
 void partial(char *cfgfile, char *weightfile, char *outfile, int max)
 {
     gpu_index = -1;
-    network *net = load_network(cfgfile, weightfile, 1);
+    network net = load_network(cfgfile, weightfile, 1);
     save_weights_upto(net, outfile, max);
 }
 
 void tiny(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top)
 {
-    network *net = load_network(cfgfile, weightfile, 0);
-    set_batch_network(net, 1);
+    network net = load_network(cfgfile, weightfile, 0);
+    set_batch_network(&net, 1);
     srand(2222222);
 
     list *options = read_data_cfg(datacfg);
@@ -172,13 +172,13 @@ void tiny(char *datacfg, char *cfgfile, char *weightfile, char *filename, int to
             strtok(input, "\n");
         }
         image im = load_image_color(input, 0, 0);
-        image r = letterbox_image(im, net->w, net->h);
+        image r = letterbox_image(im, net.w, net.h);
 
         float *X = r.data;
         time=clock();
         float *predictions = network_predict(net, X);
-        if(net->hierarchy) hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
-        top_k(predictions, net->outputs, top, indexes);
+        if(net.hierarchy) hierarchy_predictions(predictions, net.outputs, net.hierarchy, 1, 1);
+        top_k(predictions, net.outputs, top, indexes);
         fprintf(stderr, "%s: Predicted in %f seconds.\n", input, sec(clock()-time));
         for(i = 0; i < top; ++i){
             int index = indexes[i];
@@ -192,7 +192,7 @@ void tiny(char *datacfg, char *cfgfile, char *weightfile, char *filename, int to
 
 void visualize(char *cfgfile, char *weightfile)
 {
-    network *net = load_network(cfgfile, weightfile, 0);
+    network net = load_network(cfgfile, weightfile, 0);
     visualize_network(net);
 }
 
