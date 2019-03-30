@@ -9,7 +9,7 @@ static char **demo_names;
 static image **demo_alphabet;
 static int demo_classes;
 
-static network *net;
+static network net;
 static image buff [3];
 static image buff_letter[3];
 static int buff_index = 0;
@@ -29,12 +29,12 @@ double demo_time;
 
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num);
 
-int size_network(network *net)
+int size_network(network net)
 {
     int i;
     int count = 0;
-    for(i = 0; i < net->n; ++i){
-        layer l = net->layers[i];
+    for(i = 0; i < net.n; ++i){
+        layer l = net.layers[i];
         if(l.type == YOLO || l.type == REGION || l.type == DETECTION){
             count += l.outputs;
         }
@@ -42,20 +42,20 @@ int size_network(network *net)
     return count;
 }
 
-void remember_network(network *net)
+void remember_network(network net)
 {
     int i;
     int count = 0;
-    for(i = 0; i < net->n; ++i){
-        layer l = net->layers[i];
+    for(i = 0; i < net.n; ++i){
+        layer l = net.layers[i];
         if(l.type == YOLO || l.type == REGION || l.type == DETECTION){
-            memcpy(predictions[demo_index] + count, net->layers[i].output, sizeof(float) * l.outputs);
+            memcpy(predictions[demo_index] + count, net.layers[i].output, sizeof(float) * l.outputs);
             count += l.outputs;
         }
     }
 }
 
-detection *avg_predictions(network *net, int *nboxes)
+detection *avg_predictions(network net, int *nboxes)
 {
     int i, j;
     int count = 0;
@@ -63,14 +63,14 @@ detection *avg_predictions(network *net, int *nboxes)
     for(j = 0; j < demo_frame; ++j){
         axpy_cpu(demo_total, 1./demo_frame, predictions[j], 1, avg, 1);
     }
-    for(i = 0; i < net->n; ++i){
-        layer l = net->layers[i];
+    for(i = 0; i < net.n; ++i){
+        layer l = net.layers[i];
         if(l.type == YOLO || l.type == REGION || l.type == DETECTION){
             memcpy(l.output, avg + count, sizeof(float) * l.outputs);
             count += l.outputs;
         }
     }
-    detection *dets = get_network_boxes(net, buff[0].w, buff[0].h, demo_thresh, demo_hier, 0, 1, nboxes);
+    detection *dets = get_network_boxes(&net, buff[0].w, buff[0].h, demo_thresh, demo_hier, 0, 1, nboxes);
     return dets;
 }
 
@@ -79,7 +79,7 @@ void *detect_in_thread(void *ptr)
     running = 1;
     float nms = .4;
 
-    layer l = net->layers[net->n-1];
+    layer l = net.layers[net.n-1];
     float *X = buff_letter[(buff_index+2)%3].data;
     network_predict(net, X);
 
@@ -111,7 +111,7 @@ void *fetch_in_thread(void *ptr)
         demo_done = 1;
         return 0;
     }
-    letterbox_image_into(buff[buff_index], net->w, net->h, buff_letter[buff_index]);
+    letterbox_image_into(buff[buff_index], net.w, net.h, buff_letter[buff_index]);
     return 0;
 }
 
@@ -160,7 +160,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     demo_hier = hier;
     printf("Demo\n");
     net = load_network(cfgfile, weightfile, 0);
-    set_batch_network(net, 1);
+    set_batch_network(&net, 1);
     pthread_t detect_thread;
     pthread_t fetch_thread;
 
@@ -186,9 +186,9 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     buff[0] = get_image_from_stream(cap);
     buff[1] = copy_image(buff[0]);
     buff[2] = copy_image(buff[0]);
-    buff_letter[0] = letterbox_image(buff[0], net->w, net->h);
-    buff_letter[1] = letterbox_image(buff[0], net->w, net->h);
-    buff_letter[2] = letterbox_image(buff[0], net->w, net->h);
+    buff_letter[0] = letterbox_image(buff[0], net.w, net.h);
+    buff_letter[1] = letterbox_image(buff[0], net.w, net.h);
+    buff_letter[2] = letterbox_image(buff[0], net.w, net.h);
 
     int count = 0;
     if(!prefix){

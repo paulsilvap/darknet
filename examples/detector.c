@@ -13,7 +13,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
     char *base = basecfg(cfgfile);
     printf("%s\n", base);
     float avg_loss = -1;
-    network* nets = calloc(ngpus, sizeof(network));
+    network* nets = (network*) calloc(ngpus, sizeof(network));
 
     srand(time(0));
     int seed = rand();
@@ -23,7 +23,12 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
         #ifdef GPU
         cuda_set_device(gpus[i]);
         #endif
-        nets[i] = load_network(cfgfile, weightfile, clear);
+        // nets[i] = load_network(cfgfile, weightfile, clear);
+        nets[i] = parse_network_cfg(cfgfile);
+        if (weightfile) {
+            load_weights(&nets[i], weightfile);
+        }
+        if (clear) *nets[i].seen = 0;
         nets[i].learning_rate *= ngpus;
     }
     srand(time(0));
@@ -41,7 +46,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
     list *plist = get_paths(train_images);
     char **paths = (char **)list_to_array(plist);
 
-    load_args args = {0};
+    load_args args = get_base_args(&net);
     args.coords = l.coords;
     args.paths = paths;
     args.n = imgs;
@@ -72,7 +77,8 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
 
             #pragma omp parallel for
             for(i = 0; i < ngpus; ++i){
-                resize_network(nets[i], dim, dim);
+                // resize_network(nets[i], dim, dim);
+                resize_network(nets + i, dim, dim);
             }
             net = nets[0];
         }

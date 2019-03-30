@@ -724,7 +724,7 @@ float train_network_datum(network net);
 void free_network(network *net);
 void set_batch_network(network *net, int b);
 float get_current_rate(network net);
-layer get_network_output_layer(network net);
+layer get_network_output_layer(network *net);
 void top_predictions(network *net, int n, int *index);
 network make_network(int n);
 float train_network(network net, data d);
@@ -736,7 +736,7 @@ matrix network_predict_data(network net, data test);
 float *network_predict(network net, float *input);
 void visualize_network(network net);
 size_t get_current_batch(network net);
-int resize_network(network net, int w, int h);
+int resize_network(network *net, int w, int h);
 
 // In tree.c
 tree *read_tree(char *filename);
@@ -816,11 +816,11 @@ float cuda_mag_array(float *x_gpu, size_t n);
 void cuda_push_array(float *x_gpu, float *x, size_t n);
 
 // In network.c
-void forward_network_gpu(network *net);
-void backward_network_gpu(network *net);
-void update_network_gpu(network *net);
-float train_networks(network **nets, int n, data d, int interval);
-void sync_nets(network **nets, int n, int interval);
+void forward_network_gpu(network net);
+void backward_network_gpu(network net);
+void update_network_gpu(network net);
+float train_networks(network *nets, int n, data d, int interval);
+void sync_nets(network *nets, int n, int interval);
 void harmless_update_network_gpu(network *net);
 
 // In blas.c

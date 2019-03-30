@@ -184,7 +184,7 @@ int *parse_yolo_mask(char *a, int *num)
         for(i = 0; i < len; ++i){
             if (a[i] == ',') ++n;
         }
-        mask = calloc(n, sizeof(int));
+        mask = (int*) calloc(n, sizeof(int));
         for(i = 0; i < n; ++i){
             int val = atoi(a);
             mask[i] = val;
@@ -565,9 +565,9 @@ network parse_network_cfg(char *filename)
     params.h = net.h;
     params.w = net.w;
     params.c = net.c;
-    net.batch = 1;
-    net.time_steps = 1;
-    if (net.batch < net.time_steps) net.batch = net.time_steps;
+    // net.batch = 1;
+    // net.time_steps = 1;
+    // if (net.batch < net.time_steps) net.batch = net.time_steps;
     params.inputs = net.inputs;
     params.batch = net.batch;
     params.time_steps = net.time_steps;
@@ -619,8 +619,8 @@ network parse_network_cfg(char *filename)
             l.output = net.layers[count-1].output;
             l.delta = net.layers[count-1].delta;
             #ifdef GPU
-            l.output_gpu = net->layers[count-1].output_gpu;
-            l.delta_gpu = net->layers[count-1].delta_gpu;
+            l.output_gpu = net.layers[count-1].output_gpu;
+            l.delta_gpu = net.layers[count-1].delta_gpu;
             #endif
         }else{
             fprintf(stderr, "Type not recognized: %s\n", s->type);
@@ -649,7 +649,7 @@ network parse_network_cfg(char *filename)
         }
     }
     free_list(sections);
-    layer out = get_network_output_layer(net);
+    layer out = get_network_output_layer(&net);
     net.outputs = out.outputs;
     net.truths = out.outputs;
     if(net.layers[net.n-1].truths) net.truths = net.layers[net.n-1].truths;
@@ -657,16 +657,16 @@ network parse_network_cfg(char *filename)
     net.input = calloc(net.inputs*net.batch, sizeof(float));
     net.truth = calloc(net.truths*net.batch, sizeof(float));
     #ifdef GPU
-    net->output_gpu = out.output_gpu;
-    net->input_gpu = cuda_make_array(net->input, net->inputs*net->batch);
-    net->truth_gpu = cuda_make_array(net->truth, net->truths*net->batch);
+    net.output_gpu = out.output_gpu;
+    net.input_gpu = cuda_make_array(net.input, net.inputs*net.batch);
+    net.truth_gpu = cuda_make_array(net.truth, net.truths*net.batch);
     #endif
     if(workspace_size){
         #ifdef GPU
         if(gpu_index >= 0){
-            net->workspace = cuda_make_array(0, (workspace_size-1)/sizeof(float)+1);
+            net.workspace = cuda_make_array(0, (workspace_size-1)/sizeof(float)+1);
         }else {
-            net->workspace = calloc(1, workspace_size);
+            net.workspace = calloc(1, workspace_size);
         }
         #else
         net.workspace = calloc(1, workspace_size);
@@ -794,8 +794,8 @@ void save_connected_weights(layer l, FILE *fp)
 void save_weights_upto(network net, char *filename, int cutoff)
 {
 #ifdef GPU
-    if(net->gpu_index >= 0){
-        cuda_set_device(net->gpu_index);
+    if(net.gpu_index >= 0){
+        cuda_set_device(net.gpu_index);
     }
 #endif
     fprintf(stderr, "Saving weights to %s\n", filename);
@@ -922,12 +922,10 @@ void load_convolutional_weights(layer l, FILE *fp)
     if(l.numload) l.n = l.numload;
     int num = l.c/l.groups*l.n*l.size*l.size;
     fread(l.biases, sizeof(float), l.n, fp);
-    printf("\n %f \n", l.biases[0]);
     if (l.batch_normalize && (!l.dontloadscales)){
         fread(l.scales, sizeof(float), l.n, fp);
         fread(l.rolling_mean, sizeof(float), l.n, fp);
         fread(l.rolling_variance, sizeof(float), l.n, fp);
-        printf("\n %f, %f, %f \n", l.scales[0], l.rolling_mean[0], l.rolling_variance[0]);
         if(0){
             int i;
             for(i = 0; i < l.n; ++i){
@@ -984,24 +982,11 @@ void load_weights_upto(network *net, char *filename, int start, int cutoff)
     fread(&major, sizeof(int), 1, fp);
     fread(&minor, sizeof(int), 1, fp);
     fread(&revision, sizeof(int), 1, fp);
-    printf("\n %d, %d, %d \n", major, minor, revision);
-    // if ((major*10 + minor) >= 2 && major < 1000 && minor < 1000){
-    //     fread(net->seen, sizeof(size_t), 1, fp);
-    // } else {
-    //     int iseen = 0;
-    //     fread(&iseen, sizeof(int), 1, fp);
-    //     *net->seen = iseen;
-    // }
-    if ((major * 10 + minor) >= 2) {
-        // printf("\n seen 64 \n");
-        uint64_t iseen = 0;
-        fread(&iseen, sizeof(uint64_t), 1, fp);
-        *net->seen = iseen;
-    }
-    else {
-        // printf("\n seen 32 \n");
-        uint32_t iseen = 0;
-        fread(&iseen, sizeof(uint32_t), 1, fp);
+    if ((major*10 + minor) >= 2 && major < 1000 && minor < 1000){
+        fread(net->seen, sizeof(size_t), 1, fp);
+    } else {
+        int iseen = 0;
+        fread(&iseen, sizeof(int), 1, fp);
         *net->seen = iseen;
     }
 

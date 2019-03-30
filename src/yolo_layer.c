@@ -126,7 +126,6 @@ void forward_yolo_layer(const layer l, network net)
 {
     int i,j,b,t,n;
     memcpy(l.output, net.input, l.outputs*l.batch*sizeof(float));
-    // printf("%f \n",l.output[3379]);
 
 #ifndef GPU
     for (b = 0; b < l.batch; ++b){
@@ -140,7 +139,6 @@ void forward_yolo_layer(const layer l, network net)
 #endif
 
     memset(l.delta, 0, l.outputs * l.batch * sizeof(float));
-    // printf("%f \n",l.output[3379]);
     if(!net.train) return;
     float avg_iou = 0;
     float recall = 0;
@@ -320,8 +318,6 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
         for(n = 0; n < l.n; ++n){
             int obj_index  = entry_index(l, 0, n*l.w*l.h + i, 4);
             float objectness = predictions[obj_index];
-            // printf("\n %f %d", objectness, obj_index);
-            // if(objectness <= thresh) continue;
             if (objectness > thresh) {
                 int box_index  = entry_index(l, 0, n*l.w*l.h + i, 0);
                 dets[count].bbox = get_yolo_box(predictions, l.biases, l.mask[n], box_index, col, row, l.w, l.h, netw, neth, l.w*l.h);
