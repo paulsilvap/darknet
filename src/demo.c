@@ -193,7 +193,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     int count = 0;
     if(!prefix){
         // make_window("Demo", 1352, 1013, fullscreen);
-        make_window("Demo", 640, 360, fullscreen);
+        make_window("Demo", 480, 270, fullscreen);
     }
 
     demo_time = what_time_is_it_now();
