@@ -663,28 +663,28 @@ void distribute_weights(layer l, layer base)
     }
 }
 
-void sync_layer(network **nets, int n, int j)
+void sync_layer(network *nets, int n, int j)
 {
     int i;
-    network *net = nets[0];
-    layer base = net->layers[j];
+    network net = nets[0];
+    layer base = net.layers[j];
     scale_weights(base, 0);
     for (i = 0; i < n; ++i) {
-        cuda_set_device(nets[i]->gpu_index);
-        layer l = nets[i]->layers[j];
+        cuda_set_device(nets[i].gpu_index);
+        layer l = nets[i].layers[j];
         pull_weights(l);
         merge_weights(l, base);
     }
     scale_weights(base, 1./n);
     for (i = 0; i < n; ++i) {
-        cuda_set_device(nets[i]->gpu_index);
-        layer l = nets[i]->layers[j];
+        cuda_set_device(nets[i].gpu_index);
+        layer l = nets[i].layers[j];
         distribute_weights(l, base);
     }
 }
 
 typedef struct{
-    network **nets;
+    network *nets;
     int n;
     int j;
 } sync_args;
