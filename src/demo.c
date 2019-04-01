@@ -136,19 +136,19 @@ void *display_in_thread(void *ptr)
     return 0;
 }
 
-void *display_loop(void *ptr)
+/* void *display_loop(void *ptr)
 {
     while(1){
         display_in_thread(0);
     }
-}
+} */
 
-void *detect_loop(void *ptr)
+/* void *detect_loop(void *ptr)
 {
     while(1){
         detect_in_thread(0);
     }
-}
+} */
 
 void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const char *filename, char **names, int classes, int delay, char *prefix, int avg_frames, float hier, int w, int h, int frames, int fullscreen)
 {
@@ -192,7 +192,8 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
 
     int count = 0;
     if(!prefix){
-        make_window("Demo", 1352, 1013, fullscreen);
+        // make_window("Demo", 1352, 1013, fullscreen);
+        make_window("Demo", 640, 360, fullscreen);
     }
 
     demo_time = what_time_is_it_now();
